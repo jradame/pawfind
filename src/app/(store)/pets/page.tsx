@@ -2,6 +2,7 @@ import { getPets } from '@/lib/actions/pets'
 import { PetSpecies } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
+import FavoriteButton from '@/components/pets/FavoriteButton'
 
 export default async function PetsPage() {
   const pets = await getPets()
@@ -45,50 +46,54 @@ export default async function PetsPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {pets.map((pet) => (
-              <Link
+              <div
                 key={pet.id}
-                href={`/pets/${pet.slug}`}
                 className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100"
               >
                 {/* Pet Image */}
                 <div className="relative h-56 bg-stone-100">
-                  {pet.images[0] ? (
-                    <Image
-                      src={pet.images[0].url}
-                      alt={pet.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-stone-300 text-5xl">
-                      🐾
-                    </div>
-                  )}
+                  <Link href={`/pets/${pet.slug}`}>
+                    {pet.images[0] ? (
+                      <Image
+                        src={pet.images[0].url}
+                        alt={pet.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-stone-300 text-5xl">
+                        🐾
+                      </div>
+                    )}
+                  </Link>
                   {pet.featured && (
                     <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
                       Featured
                     </span>
                   )}
+                  <FavoriteButton petId={pet.id} />
                 </div>
 
                 {/* Pet Info */}
-                <div className="p-5">
-                  <div className="flex items-start justify-between mb-1">
-                    <h2 className="text-xl font-bold text-stone-900">{pet.name}</h2>
-                    <span className="text-stone-400 text-sm mt-1">
-                      {pet.species === PetSpecies.DOG ? '🐶' : pet.species === PetSpecies.CAT ? '🐱' : '🐾'}
-                    </span>
+                <Link href={`/pets/${pet.slug}`}>
+                  <div className="p-5">
+                    <div className="flex items-start justify-between mb-1">
+                      <h2 className="text-xl font-bold text-stone-900">{pet.name}</h2>
+                      <span className="text-stone-400 text-sm mt-1">
+                        {pet.species === PetSpecies.DOG ? '🐶' : pet.species === PetSpecies.CAT ? '🐱' : '🐾'}
+                      </span>
+                    </div>
+                    <p className="text-stone-500 text-sm mb-1">{pet.breed}</p>
+                    <p className="text-stone-400 text-xs mb-3">
+                      {pet.age} {pet.age === 1 ? 'year' : 'years'} old · {pet.size.toLowerCase()} · {pet.gender.toLowerCase()}
+                    </p>
+                    <p className="text-stone-600 text-sm line-clamp-2">{pet.description}</p>
+                    <div className="mt-4 text-amber-600 text-sm font-medium group-hover:text-amber-700">
+                      Meet {pet.name} →
+                    </div>
                   </div>
-                  <p className="text-stone-500 text-sm mb-1">{pet.breed}</p>
-                  <p className="text-stone-400 text-xs mb-3">
-                    {pet.age} {pet.age === 1 ? 'year' : 'years'} old · {pet.size.toLowerCase()} · {pet.gender.toLowerCase()}
-                  </p>
-                  <p className="text-stone-600 text-sm line-clamp-2">{pet.description}</p>
-                  <div className="mt-4 text-amber-600 text-sm font-medium group-hover:text-amber-700">
-                    Meet {pet.name} →
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             ))}
           </div>
         )}
