@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { SignInButton, SignUpButton, UserButton, Show } from '@clerk/nextjs'
 
 export default function Navbar() {
   const pathname = usePathname()
@@ -41,7 +42,7 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTA */}
+        {/* Desktop auth */}
         <div className="hidden md:flex items-center gap-3">
           <Link
             href="/favorites"
@@ -49,12 +50,29 @@ export default function Navbar() {
           >
             ♡ Saved
           </Link>
-          <Link
-            href="/pets"
-            className="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-700 transition-colors"
-          >
-            Adopt Now
-          </Link>
+
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="text-stone-600 hover:text-stone-900 text-sm font-medium transition-colors">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button className="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-stone-700 transition-colors">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </Show>
+
+          <Show when="signed-in">
+            <Link
+              href="/dashboard"
+              className="text-stone-600 hover:text-stone-900 text-sm font-medium transition-colors"
+            >
+              Dashboard
+            </Link>
+            <UserButton />
+          </Show>
         </div>
 
         {/* Mobile hamburger */}
@@ -83,13 +101,28 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/pets"
-            onClick={() => setMenuOpen(false)}
-            className="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-medium text-center hover:bg-stone-700 transition-colors"
-          >
-            Adopt Now
-          </Link>
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="text-stone-600 text-sm font-medium">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <button className="bg-stone-900 text-white px-4 py-2 rounded-full text-sm font-medium text-center">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              href="/dashboard"
+              onClick={() => setMenuOpen(false)}
+              className="text-sm font-medium text-stone-600"
+            >
+              Dashboard
+            </Link>
+            <UserButton />
+          </Show>
         </div>
       )}
     </nav>
