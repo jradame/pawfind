@@ -74,22 +74,27 @@ model PetImage {
 }
 
 model Application {
-  id           String            @id @default(cuid())
-  userId       String
-  petId        String
-  fullName     String
-  email        String
-  phone        String
-  housingType  String
-  hasYard      Boolean?
-  hasOtherPets Boolean?
-  experience   String?
-  status       ApplicationStatus @default(PENDING)
-  notes        String?
-  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pet          Pet               @relation(fields: [petId], references: [id], onDelete: Cascade)
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  id                   String            @id @default(cuid())
+  userId               String?
+  petId                String
+  fullName             String
+  email                String
+  phone                String
+  address              String?
+  housingType          String
+  hasYard              Boolean           @default(false)
+  isRenting            Boolean           @default(false)
+  hasOtherPets         Boolean           @default(false)
+  otherPetsDescription String?
+  hoursAlonePerDay     Int               @default(4)
+  activityLevel        String?
+  experience           String?
+  status               ApplicationStatus @default(PENDING)
+  notes                String?
+  user                 User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pet                  Pet               @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
 }
 
 model Favorite {
