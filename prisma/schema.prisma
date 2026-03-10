@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  clerkId      String        @unique
+  name         String?
+  email        String        @unique
+  image        String?
+  role         Role          @default(USER)
+  applications Application[]
+  favorites    Favorite[]
+  donations    Donation[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Shelter {
+  id        String   @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  address   String?
+  city      String?
+  state     String?
+  pets      Pet[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pet {
+  id             String         @id @default(cuid())
+  name           String
+  slug           String         @unique
+  species        PetSpecies
+  breed          String
+  age            Int
+  size           PetSize
+  gender         PetGender
+  color          String?
+  description    String
+  personality    String?
+  healthNotes    String?
+  temperament    String?
+  adoptionFee    Int?
+  status         PetStatus      @default(AVAILABLE)
+  featured       Boolean        @default(false)
+  locationCity   String?
+  locationState  String?
+  shelterId      String
+  shelter        Shelter        @relation(fields: [shelterId], references: [id], onDelete: Cascade)
+  images         PetImage[]
+  applications   Application[]
+  favorites      Favorite[]
+  successStories SuccessStory[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model PetImage {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  isPrimary Boolean  @default(false)
+  petId     String
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Application {
+  id           String            @id @default(cuid())
+  userId       String
+  petId        String
+  fullName     String
+  email        String
+  phone        String
+  housingType  String
+  hasYard      Boolean?
+  hasOtherPets Boolean?
+  experience   String?
+  status       ApplicationStatus @default(PENDING)
+  notes        String?
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pet          Pet               @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  petId     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pet       Pet      @relation(fields: [petId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@unique([userId, petId])
+}
+
+model Donation {
+  id              String   @id @default(cuid())
+  userId          String?
+  amount          Int
+  stripePaymentId String?  @unique
+  status          String
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt       DateTime @default(now())
+}
+
+model SuccessStory {
+  id        String   @id @default(cuid())
+  petId     String?
+  pet       Pet?     @relation(fields: [petId], references: [id], onDelete: SetNull)
+  adopter   String
+  story     String
+  image     String?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PetSpecies {
+  DOG
+  CAT
+  OTHER
+}
+
+enum PetSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum PetGender {
+  MALE
+  FEMALE
+}
+
+enum PetStatus {
+  AVAILABLE
+  PENDING
+  ADOPTED
+}
+
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
