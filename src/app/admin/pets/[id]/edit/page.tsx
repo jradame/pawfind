@@ -1,7 +1,8 @@
 import { prisma } from '@/lib/db'
-import { updatePet } from '@/lib/actions/admin'
+import { updatePet, } from '@/lib/actions/admin'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import DeletePetButton from '@/components/admin/DeletePetButton'
 
 export default async function EditPetPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -92,9 +93,12 @@ export default async function EditPetPage({ params }: { params: Promise<{ id: st
           </label>
         </div>
         <div className="px-6 py-5 flex items-center justify-between">
-          <Link href="/admin/pets" className="text-sm text-stone-400 hover:text-stone-700 transition-colors">
-            Cancel
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/admin/pets" className="text-sm text-stone-400 hover:text-stone-700 transition-colors">
+              Cancel
+            </Link>
+            <DeletePetButton petId={pet.id} petName={pet.name} />
+          </div>
           <button type="submit" className="bg-stone-900 text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-stone-700 transition-colors">
             Save Changes
           </button>

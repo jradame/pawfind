@@ -96,3 +96,15 @@ export async function updatePet(formData: FormData) {
   revalidatePath('/pets')
   redirect('/admin/pets')
 }
+export async function deletePet(formData: FormData) {
+  const id = formData.get('id') as string
+
+  await prisma.petImage.deleteMany({ where: { petId: id } })
+  await prisma.favorite.deleteMany({ where: { petId: id } })
+  await prisma.application.deleteMany({ where: { petId: id } })
+  await prisma.pet.delete({ where: { id } })
+
+  revalidatePath('/admin/pets')
+  revalidatePath('/pets')
+  redirect('/admin/pets')
+}
