@@ -3,7 +3,7 @@
 A full-stack pet adoption platform built with Next.js, PostgreSQL, Prisma, and Clerk auth. Built to modernize the pet adoption experience for Austin-area shelters.
 
 ## Live Demo
-[pawfind.vercel.app](https://pawfind.vercel.app)
+[https://pawfind-xi.vercel.app/](https://pawfind-xi.vercel.app/)
 
 ## Tech Stack
 - **Framework:** Next.js 16 (App Router, Server Actions)
