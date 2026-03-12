@@ -67,7 +67,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-stone-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-stone-500">
-          <p>© 2026 PawFind. Built by Justin Radame in Austin, TX.</p>
+          <p>© 2026 PawFind. Built by Justin Adame in Austin, TX.</p>
           <p>Austin is a no-kill city. Help us keep it that way.</p>
         </div>
       </div>
