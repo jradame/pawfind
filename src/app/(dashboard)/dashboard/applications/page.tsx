@@ -1,18 +1,25 @@
+import { auth } from '@clerk/nextjs/server'
+import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
 
 export default async function ApplicationsPage() {
+  const { userId } = await auth()
+  if (!userId) redirect('/sign-in')
+
   const applications = await prisma.application.findMany({
-    include: {
-      pet: true,
-    },
+    where: { userId },
+    include: { pet: true },
     orderBy: { createdAt: 'desc' },
   })
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-16">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-stone-900">My Applications</h1>
+        <Link href="/dashboard" className="text-stone-400 hover:text-stone-900 transition-colors text-sm">
+          ← Back to Dashboard
+        </Link>
+        <h1 className="text-2xl font-bold text-stone-900 mt-4">My Applications</h1>
         <p className="text-stone-500 text-sm mt-1">Track the status of your adoption applications.</p>
       </div>
 
