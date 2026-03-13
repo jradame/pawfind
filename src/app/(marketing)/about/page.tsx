@@ -1,6 +1,6 @@
 export default function AboutPage() {
   return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
+    <div className="min-h-screen bg-[#0a0a0a] max-w-3xl mx-auto px-6 py-16">
       <div className="mb-12">
         <h1 className="text-4xl font-bold text-white mb-4">About PawFind</h1>
         <p className="text-stone-300 text-lg leading-relaxed">
